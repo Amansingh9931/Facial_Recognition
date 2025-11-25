@@ -1,11 +1,12 @@
 import streamlit as st
 import pandas as pd
-import time 
+import time
 from datetime import datetime
+import os
 
-ts=time.time()
-date=datetime.fromtimestamp(ts).strftime("%d-%m-%Y")
-timestamp=datetime.fromtimestamp(ts).strftime("%H:%M-%S")
+ts = time.time()
+date = datetime.fromtimestamp(ts).strftime("%d-%m-%Y")
+timestamp = datetime.fromtimestamp(ts).strftime("%H:%M-%S")
 
 from streamlit_autorefresh import st_autorefresh
 
@@ -22,7 +23,13 @@ elif count % 5 == 0:
 else:
     st.write(f"Count: {count}")
 
-
-df=pd.read_csv("Attendance/Attendance_" + date + ".csv")
-
-st.dataframe(df.style.highlight_max(axis=0))
+attendance_file = os.path.join("Attendance", f"Attendance_{date}.csv")
+if not os.path.exists(attendance_file):
+    st.warning(f"No attendance file for today: {attendance_file}")
+    st.write("Run the recognition script and take attendance (press 'o') to generate the CSV.")
+else:
+    try:
+        df = pd.read_csv(attendance_file)
+        st.dataframe(df.style.highlight_max(axis=0))
+    except Exception as e:
+        st.error(f"Failed to read attendance CSV: {e}")

@@ -4,4 +4,5 @@ scikit-learn
 pandas
 streamlit
 streamlit-autorefresh
-pywin32; platform_system == "Windows"
+pywin32;
+platform_system == "Windows"
